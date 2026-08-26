@@ -1,6 +1,8 @@
 import requests
 import os
 from dotenv import load_dotenv
+from .restapis import get_request, analyze_review_sentiments, post_review
+
 
 load_dotenv()
 
@@ -39,6 +41,18 @@ def post_review(data_dict):
         return response.json()
     except Exception as err:
         print(f"Network exception occurred: {err}")
+
+def add_review(request):
+    if(request.user.is_anonymous == False):
+        data = json.loads(request.body)
+        try:
+            response = post_review(data)
+            return JsonResponse({"status":200})
+        except:
+            return JsonResponse({"status":401,"message":"Error in posting review"})
+    else:
+        return JsonResponse({"status":403,"message":"Unauthorized"})
+
 
 # def get_request(endpoint, **kwargs):
 # Add code for get requests to back end
