@@ -6,46 +6,110 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     
-    <!-- Custom styling to match the provided image theme -->
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: #e1e1e1;
+        }
         body {
-            background-color: #e3e3e3; /* Light gray background */
+            display: flex;
+            flex-direction: column;
         }
         .custom-navbar {
-            background-color: #1be0e0; /* Bright cyan/turquoise navbar */
+            background-color: #1be0e0; /* Cyan navbar */
             padding: 15px 30px;
+            flex-shrink: 0;
         }
         .custom-navbar .navbar-brand {
-            color: #222;
+            color: #333;
             font-weight: 500;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             margin-right: 2rem;
         }
         .custom-navbar .nav-link {
             color: #333 !important;
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-right: 15px;
         }
-        .custom-navbar .nav-link:hover {
-            color: #000 !important;
-            text-decoration: underline;
+        /* Wrapper to keep the card perfectly centered on any screen size */
+        .page-content-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
         }
-        .custom-navbar .nav-item.active .nav-link {
-            font-weight: 600;
+        .contact-card {
+            background-color: #e3e3e3;
+            border-radius: 25px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 850px;
+            overflow: hidden;
+            padding-bottom: 30px;
+        }
+        /* Properly proportioned image styling preventing squishing */
+        .contact-image {
+            width: 100%;
+            height: auto;
+            max-height: 240px;
+            object-fit: cover;
+            display: block;
+        }
+        .contact-content {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .icon-section {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        .text-section {
+            flex: 1;
+            min-width: 280px;
+            border-left: 1px solid #999;
+            text-align: center;
+            color: #66b3ff; /* Light blue contact details */
+            font-size: 0.95rem;
+            padding: 0 20px;
+        }
+        .text-section p {
+            margin-bottom: 2px;
+        }
+        .text-section a {
+            color: #66b3ff;
+            text-decoration: none;
+        }
+        .text-spacer {
+            margin-bottom: 12px;
+        }
+        /* Responsive fallback for smaller mobile screens */
+        @media (max-width: 768px) {
+            .text-section {
+                border-left: none;
+                border-top: 1px solid #999;
+                margin-top: 20px;
+                padding-top: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation bar with custom cyan background -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg custom-navbar">
         <a class="navbar-brand" href="/">Dealerships</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
         <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- Left-aligned links -->
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
@@ -56,42 +120,43 @@
                     <a class="nav-link" href="/contact">Contact Us</a>
                 </li>
             </ul>
-            
-            <!-- Right-aligned login/register links to match image -->
-            <ul class="navbar-nav ml-auto" style="margin-left: auto; display: flex;">
-                <li class="nav-item">
-                    <a class="nav-link text-decoration-underline" style="text-decoration: underline;" href="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-decoration-underline" style="text-decoration: underline;" href="/register">Register</a>
-                </li>
-            </ul>
         </div>
     </nav>
 
-    <!-- Contact information content -->
-    <div class="container mt-5">
-        <div class="text-center mb-4">
-            <h1>Contact Us</h1>
-            <p>Get in touch with Best Cars dealership for any questions regarding our domestic and imported vehicles.</p>
-        </div>
-        
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <!-- Set card background to white so it stands out against the gray body -->
-                <div class="card shadow-sm p-4 text-center" style="background-color: #ffffff; border-radius: 8px;">
-                    <img src="/static/contact_icon.png" alt="Contact Icon" style="width: 50px; margin: 0 auto 15px;">
-                    <h4>Customer Support</h4>
-                    <p><strong>Email:</strong> support@bestcars.com</p>
-                    <p><strong>Phone:</strong> 1-800-555-0199</p>
-                    <hr>
-                    <h4>Dealership Location</h4>
-                    <p><strong>Address:</strong> 123 Auto Drive, Motor City, NA 12345</p>
-                    <hr>
-                    <h4>Operating Hours</h4>
-                    <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p>Saturday: 10:00 AM - 4:00 PM</p>
-                    <p>Sunday: Closed</p>
+    <!-- Centered Page Wrapper -->
+    <div class="page-content-wrapper">
+        <div class="contact-card">
+            <!-- Car Lot Image with proper proportions -->
+            <img src="/static/dealership.jpg" alt="Car Lot" class="contact-image">
+            
+            <div class="contact-content">
+                <!-- Left Column: Custom Cyan Headset Icon -->
+                <div class="icon-section">
+                    <svg width="160" height="160" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="35" r="16" fill="#1be0e0" />
+                        <path d="M 28 35 A 22 22 0 0 1 72 35" fill="none" stroke="#1be0e0" stroke-width="4" />
+                        <rect x="70" y="32" width="6" height="14" rx="3" fill="#1be0e0" />
+                        <path d="M 72 45 C 72 52, 62 52, 56 48" fill="none" stroke="#1be0e0" stroke-width="4" stroke-linecap="round" />
+                        <path d="M 20 85 C 20 60, 80 60, 80 85 L 80 90 L 20 90 Z" fill="#1be0e0" />
+                    </svg>
+                </div>
+                
+                <!-- Right Column: Contact Details -->
+                <div class="text-section">
+                    <p>Contact Customer Service</p>
+                    <p class="text-spacer"><a href="mailto:support@bestcars.com">support@bestcars.com</a></p>
+                    
+                    <p>Contact our National Advertising team</p>
+                    <p class="text-spacer"><a href="mailto:NationalSales@bestcars.com">NationalSales@bestcars.com</a></p>
+                    
+                    <p>Contact our Public Relations team</p>
+                    <p class="text-spacer"><a href="mailto:PR@bestcars.com">PR@bestcars.com</a></p>
+                    
+                    <p>Contact the bestcars.com offices</p>
+                    <p class="text-spacer">312-611-1111</p>
+                    
+                    <p>Become a bestcars.com car dealer</p>
+                    <p><a href="http://growwithbestcars.com" target="_blank">Visit growwithbestcars.com</a></p>
                 </div>
             </div>
         </div>
