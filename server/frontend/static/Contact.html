@@ -3,28 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact Us - Best Cars</title>
-    <!-- Add the style sheets link as instructed -->
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/bootstrap.min.css">
+    
+    <!-- Custom styling to match the provided image theme -->
+    <style>
+        body {
+            background-color: #e3e3e3; /* Light gray background */
+        }
+        .custom-navbar {
+            background-color: #1be0e0; /* Bright cyan/turquoise navbar */
+            padding: 15px 30px;
+        }
+        .custom-navbar .navbar-brand {
+            color: #222;
+            font-weight: 500;
+            font-size: 1.8rem;
+            margin-right: 2rem;
+        }
+        .custom-navbar .nav-link {
+            color: #333 !important;
+            font-size: 1.1rem;
+            margin-right: 15px;
+        }
+        .custom-navbar .nav-link:hover {
+            color: #000 !important;
+            text-decoration: underline;
+        }
+        .custom-navbar .nav-item.active .nav-link {
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header navigation bar, with Contact Us as the active link -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Best Cars</a>
+    <!-- Navigation bar with custom cyan background -->
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <a class="navbar-brand" href="/">Dealerships</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <!-- Left-aligned links -->
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/about">About Us</a>
                 </li>
-                <!-- Active link for Contact Us -->
                 <li class="nav-item active">
-                    <a class="nav-link active" style="font-weight: bold; color: blue;" href="/contact">Contact Us</a>
+                    <a class="nav-link" href="/contact">Contact Us</a>
+                </li>
+            </ul>
+            
+            <!-- Right-aligned login/register links to match image -->
+            <ul class="navbar-nav ml-auto" style="margin-left: auto; display: flex;">
+                <li class="nav-item">
+                    <a class="nav-link text-decoration-underline" style="text-decoration: underline;" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-decoration-underline" style="text-decoration: underline;" href="/register">Register</a>
                 </li>
             </ul>
         </div>
@@ -39,7 +78,8 @@
         
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card shadow-sm p-4 text-center">
+                <!-- Set card background to white so it stands out against the gray body -->
+                <div class="card shadow-sm p-4 text-center" style="background-color: #ffffff; border-radius: 8px;">
                     <img src="/static/contact_icon.png" alt="Contact Icon" style="width: 50px; margin: 0 auto 15px;">
                     <h4>Customer Support</h4>
                     <p><strong>Email:</strong> support@bestcars.com</p>
