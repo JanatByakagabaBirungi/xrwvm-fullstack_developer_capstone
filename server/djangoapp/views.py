@@ -1,13 +1,3 @@
-# Uncomment the required imports before adding the code
-
-# from django.shortcuts import render
-# from django.http import HttpResponseRedirect, HttpResponse
-# from django.contrib.auth.models import User
-# from django.shortcuts import get_object_or_404, render, redirect
-# from django.contrib.auth import logout
-# from django.contrib import messages
-# from datetime import datetime
-
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, login, authenticate
 from django.http import JsonResponse
@@ -37,13 +27,16 @@ def login_user(request):
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
-    logout(request)
-    data = {"userName": ""}
+    logout(request) # Terminate user session
+    data = {"userName":""} # Return empty username
     return JsonResponse(data)
 
 # Create a `registration` view to handle sign up request
 @csrf_exempt
 def registration(request):
+    context = {}
+
+    # Load JSON data from the request body
     data = json.loads(request.body)
     username = data['userName']
     password = data['password']
@@ -51,19 +44,25 @@ def registration(request):
     last_name = data['lastName']
     email = data['email']
     username_exist = False
+    email_exist = False
     try:
+        # Check if user already exists
         User.objects.get(username=username)
         username_exist = True
     except:
-        logger.debug(f"{username} is new user")
+        # If not, simply log this is a new user
+        logger.debug("{} is new user".format(username))
 
+    # If it is a new user
     if not username_exist:
-        user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password, email=email)
+        # Create user in auth_user table
+        user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,password=password, email=email)
+        # Login the user and redirect to list page
         login(request, user)
-        data = {"userName": username, "status": "Authenticated"}
+        data = {"userName":username,"status":"Authenticated"}
         return JsonResponse(data)
-    else:
-        data = {"userName": username, "error": "Already Registered"}
+    else :
+        data = {"userName":username,"error":"Already Registered"}
         return JsonResponse(data)
 
 def get_cars(request):
