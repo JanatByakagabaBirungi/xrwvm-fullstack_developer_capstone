@@ -1,13 +1,19 @@
 import requests
 import os
+import json
+from django.http import JsonResponse
 from dotenv import load_dotenv
-##from .restapis import get_request, analyze_review_sentiments, post_review
+# from .restapis import get_request, analyze_review_sentiments, post_review
 
 
 load_dotenv()
 
 backend_url = os.getenv('backend_url', default="http://localhost:3030")
-sentiment_analyzer_url = os.getenv('sentiment_analyzer_url', default="https://sentianalyzer.2e03iz6yvsx6.us-south.codeengine.appdomain.cloud/")
+sentiment_analyzer_url = os.getenv(
+    'sentiment_analyzer_url',
+    default="https://sentianalyzer.2e03iz6yvsx6.us-south.codeengine.appdomain.cloud/"
+)
+
 
 def get_request(endpoint, **kwargs):
     params = ""
@@ -24,6 +30,7 @@ def get_request(endpoint, **kwargs):
     except Exception as err:
         print(f"Network exception occurred: {err}")
 
+
 def analyze_review_sentiments(text):
     request_url = sentiment_analyzer_url + "analyze/" + text
     try:
@@ -32,6 +39,7 @@ def analyze_review_sentiments(text):
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
         print("Network exception occurred")
+
 
 def post_review(data_dict):
     request_url = backend_url + "/insert_review"
@@ -42,24 +50,16 @@ def post_review(data_dict):
     except Exception as err:
         print(f"Network exception occurred: {err}")
 
+
 def add_review(request):
-    if(request.user.is_anonymous == False):
+    if not request.user.is_anonymous:
         data = json.loads(request.body)
         try:
-            response = post_review(data)
-            return JsonResponse({"status":200})
-        except:
-            return JsonResponse({"status":401,"message":"Error in posting review"})
+            post_review(data)
+            return JsonResponse({"status": 200})
+        except Exception:
+            return JsonResponse(
+                {"status": 401, "message": "Error in posting review"}
+            )
     else:
-        return JsonResponse({"status":403,"message":"Unauthorized"})
-
-
-# def get_request(endpoint, **kwargs):
-# Add code for get requests to back end
-
-# def analyze_review_sentiments(text):
-# request_url = sentiment_analyzer_url+"analyze/"+text
-# Add code for retrieving sentiments
-
-# def post_review(data_dict):
-# Add code for posting review
+        return JsonResponse({"status": 403, "message": "Unauthorized"})
