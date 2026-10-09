@@ -4,7 +4,6 @@ import json
 from django.http import JsonResponse
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 backend_url = os.getenv('backend_url', default="http://localhost:3030")
