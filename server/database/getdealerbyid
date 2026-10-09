@@ -1,0 +1,2 @@
+curl -X GET "http://localhost:3030/fetchDealer/15"
+{"id": 15, "city": "Laredo", "state": "Texas", "st": "TX", "address": "62688 Northridge Drive", "zip": "78044", "lat": 27.5323, "long": -99.4921, "short_name": "Wilcox Inc", "full_name": "Wilcox Inc"}

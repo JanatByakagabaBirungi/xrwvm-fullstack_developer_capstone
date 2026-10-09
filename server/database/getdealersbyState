@@ -1,0 +1,2 @@
+curl -X GET "http://localhost:3030/fetchDealers/Kansas"
+[{"id": 3, "city": "Topeka", "state": "Kansas", "st": "KS", "address": "81016 Buena Vista Pass", "zip": "66642", "lat": 39.0429, "long": -95.7697, "short_name": "McGlynn-Glover", "full_name": "McGlynn-Glover"}]

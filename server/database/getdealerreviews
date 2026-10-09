@@ -1,0 +1,2 @@
+curl -X GET "http://localhost:3030/fetchReviews/dealer/15"
+[{"id": 1, "name": "Berkly Shepley", "dealership": 15, "review": "Total grid-enabled service-desk", "purchase": true, "purchase_date": "07/11/2020", "car_make": "Audi", "car_model": "A6", "car_year": 2010}]
