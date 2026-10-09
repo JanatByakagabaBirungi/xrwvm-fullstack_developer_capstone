@@ -157,3 +157,4 @@ def add_review(request):
         return JsonResponse({"status": 200})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
+
