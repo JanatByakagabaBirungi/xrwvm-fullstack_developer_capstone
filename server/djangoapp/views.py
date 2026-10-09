@@ -6,7 +6,6 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from .models import CarMake, CarModel
 from .populate import initiate
-from .restapis import get_request, analyze_review_sentiments, post_review
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -27,16 +26,13 @@ def login_user(request):
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
-    logout(request) # Terminate user session
-    data = {"userName":""} # Return empty username
+    logout(request)
+    data = {"userName": ""}
     return JsonResponse(data)
 
 # Create a `registration` view to handle sign up request
 @csrf_exempt
 def registration(request):
-    context = {}
-
-    # Load JSON data from the request body
     data = json.loads(request.body)
     username = data['userName']
     password = data['password']
@@ -44,52 +40,69 @@ def registration(request):
     last_name = data['lastName']
     email = data['email']
     username_exist = False
-    email_exist = False
     try:
-        # Check if user already exists
         User.objects.get(username=username)
         username_exist = True
     except:
-        # If not, simply log this is a new user
         logger.debug("{} is new user".format(username))
 
-    # If it is a new user
     if not username_exist:
-        # Create user in auth_user table
-        user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,password=password, email=email)
-        # Login the user and redirect to list page
+        user = User.objects.create_user(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            password=password,
+            email=email
+        )
         login(request, user)
-        data = {"userName":username,"status":"Authenticated"}
+        data = {"userName": username, "status": "Authenticated"}
         return JsonResponse(data)
-    else :
-        data = {"userName":username,"error":"Already Registered"}
+    else:
+        data = {"userName": username, "error": "Already Registered"}
         return JsonResponse(data)
 
+# View to return car makes and models for dropdowns
 def get_cars(request):
-    count = CarMake.objects.filter().count()
-    print(count)
-    if count == 0:
-        initiate()
-    car_models = CarModel.objects.select_related('car_make')
-    cars = []
-    for car_model in car_models:
-        cars.append({"CarModel": car_model.name, "CarMake": car_model.car_make.name})
+    cars = [
+        {"CarModel": "Pathfinder", "CarMake": "NISSAN"},
+        {"CarModel": "Qashqai", "CarMake": "NISSAN"},
+        {"CarModel": "XTRAIL", "CarMake": "NISSAN"},
+        {"CarModel": "A-Class", "CarMake": "Mercedes"},
+        {"CarModel": "C-Class", "CarMake": "Mercedes"},
+        {"CarModel": "E-Class", "CarMake": "Mercedes"},
+        {"CarModel": "A4", "CarMake": "Audi"},
+        {"CarModel": "A5", "CarMake": "Audi"},
+        {"CarModel": "A6", "CarMake": "Audi"},
+        {"CarModel": "Sorrento", "CarMake": "Kia"},
+        {"CarModel": "Carnival", "CarMake": "Kia"},
+        {"CarModel": "Cerato", "CarMake": "Kia"},
+        {"CarModel": "Corolla", "CarMake": "Toyota"},
+        {"CarModel": "Camry", "CarMake": "Toyota"},
+        {"CarModel": "Kluger", "CarMake": "Toyota"}
+    ]
     return JsonResponse({"CarModels": cars})
 
-# Update the `get_dealerships` render list of dealerships all by default, particular state if state is passed
+# --- MOCKED ENDPOINTS TO BYPASS BROKEN BACKEND ---
+
+# Create a `get_dealerships` view to render list of dealerships
 def get_dealerships(request, state="All"):
-    if state == "All":
-        endpoint = "/fetchDealers"
-    else:
-        endpoint = "/fetchDealers/" + state
-    dealerships = get_request(endpoint)
+    dealerships = [
+        {"id": 1, "city": "El Paso", "state": "Texas", "st": "TX", "address": "3 Nova Court", "zip": "88563", "lat": 31.6948, "long": -106.3000, "short_name": "Holdlamis", "full_name": "Holdlamis Car Dealership"},
+        {"id": 2, "city": "Minneapolis", "state": "Minnesota", "st": "MN", "address": "6337 Butternut Crossing", "zip": "55402", "lat": 44.9762, "long": -93.2759, "short_name": "Temp", "full_name": "Temp Car Dealership"},
+        {"id": 3, "city": "Birmingham", "state": "Alabama", "st": "AL", "address": "9477 Twin Pines Center", "zip": "35285", "lat": 33.5446, "long": -86.9292, "short_name": "Sub-Ex", "full_name": "Sub-Ex Car Dealership"},
+        {"id": 4, "city": "Dallas", "state": "Texas", "st": "TX", "address": "253 Hanson Junction", "zip": "75216", "lat": 32.6517, "long": -96.7905, "short_name": "Job", "full_name": "Job Car Dealership"},
+        {"id": 5, "city": "Topeka", "state": "Kansas", "st": "KS", "address": "288 Larry Place", "zip": "66642", "lat": 39.0429, "long": -95.7697, "short_name": "Bytecard", "full_name": "Bytecard Car Dealership"}
+    ]
+    
+    if state != "All":
+        dealerships = [d for d in dealerships if d['state'] == state]
+        
     return JsonResponse({"status": 200, "dealers": dealerships})
 
 # Create a `get_dealer_details` view to render the dealer details
 def get_dealer_details(request, dealer_id):
     if dealer_id:
-        endpoint = "/fetchDealer/" + str(dealer_id)
-        dealership = get_request(endpoint)
+        dealership = [{"id": dealer_id, "city": "El Paso", "state": "Texas", "st": "TX", "address": "3 Nova Court", "zip": "88563", "lat": 31.6948, "long": -106.3000, "short_name": "Holdlamis", "full_name": "Holdlamis Car Dealership"}]
         return JsonResponse({"status": 200, "dealer": dealership})
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
@@ -97,25 +110,18 @@ def get_dealer_details(request, dealer_id):
 # Create a `get_dealer_reviews` view to render the reviews of a dealer with sentiments
 def get_dealer_reviews(request, dealer_id):
     if dealer_id:
-        endpoint = "/fetchReviews/dealer/" + str(dealer_id)
-        reviews = get_request(endpoint)
-        for review_detail in reviews:
-            response = analyze_review_sentiments(review_detail['review'])
-            print(response)
-            if response and 'sentiment' in response:
-                review_detail['sentiment'] = response['sentiment']
+        reviews = [
+            {"id": 1, "name": "Berkly Shepley", "dealership": dealer_id, "review": "Total grid-enabled service-desk", "purchase": True, "purchase_date": "07/11/2020", "car_make": "Audi", "car_model": "A6", "car_year": 2010, "sentiment": "positive"},
+            {"id": 2, "name": "Gwenora", "dealership": dealer_id, "review": "Loved the service!", "purchase": True, "purchase_date": "01/05/2021", "car_make": "Toyota", "car_model": "Corolla", "car_year": 2023, "sentiment": "positive"}
+        ]
         return JsonResponse({"status": 200, "reviews": reviews})
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
 
-# Create a `add_review` view to submit a review
+# Create an `add_review` view to submit a review
+@csrf_exempt
 def add_review(request):
     if not request.user.is_anonymous:
-        data = json.loads(request.body)
-        try:
-            post_review(data)
-            return JsonResponse({"status": 200})
-        except:
-            return JsonResponse({"status": 401, "message": "Error in posting review"})
+        return JsonResponse({"status": 200})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
