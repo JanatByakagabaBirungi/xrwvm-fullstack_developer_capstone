@@ -3,7 +3,6 @@ import os
 import json
 from django.http import JsonResponse
 from dotenv import load_dotenv
-# from .restapis import get_request, analyze_review_sentiments, post_review
 
 
 load_dotenv()
@@ -11,7 +10,10 @@ load_dotenv()
 backend_url = os.getenv('backend_url', default="http://localhost:3030")
 sentiment_analyzer_url = os.getenv(
     'sentiment_analyzer_url',
-    default="https://sentianalyzer.2e03iz6yvsx6.us-south.codeengine.appdomain.cloud/"
+    default=(
+        "https://sentianalyzer.2e03iz6yvsx6.us-south."
+        "codeengine.appdomain.cloud/"
+    )
 )
 
 
